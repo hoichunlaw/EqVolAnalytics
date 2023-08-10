@@ -316,20 +316,15 @@ def get_exchangeTimeZone(calendar):
         if "error" in result.keys():
             return None
         else:
-            return result["result"]
+            return result
     except:
         return None
     
-def get_holidayCalendar(calendar, dateRef=None):
+def get_holidayCalendar(calendar):
 
     req = api_url + "api/v1/getHolidayCalendar"
-
-    if dateRef is None:
-        body = {"date": datetime.now().strftime("%Y-%m-%d")}
-    else:
-        body = {"date": dateRef}
     
-    response = sess.post(req, json=body)
+    response = sess.get(req)
 
     result = json.loads(response.text)
     if "error" in result.keys():
