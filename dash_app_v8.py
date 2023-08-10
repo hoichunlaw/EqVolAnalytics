@@ -488,6 +488,7 @@ def createUndlNameInfoRowData(undlName):
             holidayCalendar = get_holidayCalendar(calendar)
             timeZone = get_exchangeTimeZone(calendar)
             if timeZone is not None:
+                timeZone = timeZone["result"]
                 if timeZone > 0:
                     timeZone = "+" + str(timeZone)
                 else:
