@@ -5,9 +5,9 @@ import os, json, time, getpass
 from datetime import date, datetime, timedelta
 from ast import literal_eval
 
-api_url = "http://127.0.0.1:8000/"
+#api_url = "http://127.0.0.1:8000/"
 #api_url = "http://192.168.0.100:8000/"
-#api_url = "http://18.163.62.226:80/"
+api_url = "http://18.163.62.226:80/"
 
 sess = requests.Session()
 
