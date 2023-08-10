@@ -10,7 +10,6 @@ import plotly.graph_objs as go
 import dash_bootstrap_components as dbc
 from dash import Input, Output, dcc, html, dash_table, State
 from dash.dash_table.Format import Format, Scheme
-import dash_daq as daq
 import dash_ag_grid as dag
 import dash_mantine_components as dmc
 from datetime import date, datetime, timedelta
@@ -35,10 +34,11 @@ expiryCalendars = list(set([v["Calendar"]+"_"+v["Type"] for k,v in underlyingDat
 listedMaturities = {ec:get_listedMaturity(96, ec)["maturities"] for ec in expiryCalendars}
 
 # load user config
-with open("UserConfig.json", "r") as f:
-    userConfig = json.load(f)
-
-useBBGData = userConfig["BBGData"]
+useBBGData = 0
+if os.path.exists("UserConfig.json"):
+    with open("UserConfig.json", "r") as f:
+        userConfig = json.load(f)
+    useBBGData = userConfig["BBGData"]
 
 # helper functions
 def toDate(string, dateFormat="%Y-%m-%d"):
@@ -114,13 +114,6 @@ def toSystemDate(dateStr):
     except:
 
         return "Error in date string"
-    
-def checkUndlMarketData(undlName):
-
-    yieldCurve = get_yieldCurve(get_CCY(undlName))
-    holidayCalendar = get_holidayCalendar(get_calendar(undlName))
-
-    return False if (yieldCurve is None or holidayCalendar is None) else True
 
 def extractMaturityFromContractSymbol(symbol):
     
@@ -294,9 +287,9 @@ CONTENT_STYLE = {
 
 tableUdlInfo = dag.AgGrid(id="tableUndlInfo",
                           rowData=[],
-                          columnDefs=[{"field": "Field", "minWidth": 120, "maxWidth": 120, "pinned": "left"}, 
-                                      {"field": "Value", "maxWidth": 170, "minWidth": 170, "editable": False}], 
-                          columnSize="autoSizeAll",
+                          columnDefs=[{"field": "Field", "minWidth": 110, "maxWidth": 110, "pinned": "left"}, 
+                                      {"field": "Value", "maxWidth": 160, "minWidth": 160, "editable": False}], 
+                          columnSize="autoSize",
                           className="ag-theme-balham ag-theme-custom",
                           dashGridOptions={"rowHeight": 30},
                           style={"width": 300, "height": 340, "margin-top": "0px", "margin-bottom": "25px"})
@@ -304,10 +297,10 @@ tableUdlInfo = dag.AgGrid(id="tableUndlInfo",
 tableMarketDataCheck = dag.AgGrid(id="tableMarketDataCheck",
                           rowData=[],
                           columnDefs=[{"field": "Data", "minWidth": 160, "maxWidth": 160, "pinned": "left"}, 
-                                      {"field": "Check", "maxWidth": 130, "minWidth": 130, "editable": False,
+                                      {"field": "Check", "maxWidth": 110, "minWidth": 110, "editable": False,
                                        "cellStyle": {"styleConditions": [{"condition": "params.value == 'Missing'", "style": {"color": "red"}}], 
                                                      "defaultStyle": {"color": "black"}},}], 
-                          columnSize="autoSizeAll",
+                          columnSize="autoSize",
                           className="ag-theme-balham ag-theme-custom",
                           dashGridOptions={"rowHeight": 30},
                           style={"width": 300, "height": 220, "margin-top": "10px"})
@@ -316,31 +309,32 @@ sidebar = html.Div(
     [   
         dcc.ConfirmDialog(id="confirm-fetchDB", message="Database fetched"), 
         dcc.Store(id="memory"),
-        html.Div([html.H4("Market Data Manager", className="display-8", style={"margin-bottom": "20px"}), 
+        html.Div([
+            html.Div([html.H4("Market Data Manager", className="display-8", style={"margin-bottom": "20px"}), 
                   dbc.Button("Undl DB", id="button-undlDB", outline=True, color="primary", href="/addUndlName", n_clicks=0, className="me-2"),
                   dbc.Button("Fetch DB", id="button-fetchDB", outline=True, color="primary", n_clicks=0, className="me-2"),
                   dbc.Button("Setting", id="button-setting", outline=True, color="primary", href="/setting", n_clicks=0, className="me-2")]),
-        html.Hr(),
-        html.Div([dcc.Dropdown(sorted(list(underlyingDatabase.keys())), id='undlName-dropdown', placeholder="Underlying", style={'color': '#999999'})]),
-        html.H6(""),
-        dbc.Nav(
-            [
-                dbc.NavLink("Home", href="/", active="exact"),
-                dbc.NavLink("Forward", href="/forward", active="exact"),
-                dbc.NavLink("Volatility", href="/volatility", active="exact"),
-            ],
-            vertical=False,
-            pills=True
-        ),
-        html.H4(" "),
-        html.Hr(),
-        html.H4(" "),
-        html.Div([html.H6("    Underlying Info"), tableUdlInfo, html.H4(" "), html.H6("    Underlying Data Check"), tableMarketDataCheck]),
-        html.Div([html.H6(id="text-checkRate"), html.H6(id="text-checkDiv")]),
-        html.Div(html.H6(" "), style={"height": "100px", "width": "100%"}),
-        html.Div([dcc.Loading([dcc.Store(id='memory-vol'), dcc.Store(id='memory-fwd')], type="default", color="#466590")], 
-                 style={"width": "100%"}),
-        html.Div(html.H6(" "), style={"height": "440px", "width": "100%"}),
+            html.Hr(),
+            html.Div([dcc.Dropdown(sorted(list(underlyingDatabase.keys())), id='undlName-dropdown', placeholder="Underlying", style={'color': '#999999'})]),
+            html.H6(""),
+            dbc.Nav(
+                [
+                    dbc.NavLink("Home", href="/", active="exact"),
+                    dbc.NavLink("Forward", href="/forward", active="exact"),
+                    dbc.NavLink("Volatility", href="/volatility", active="exact"),
+                ],
+                vertical=False,
+                pills=True
+            ),
+            html.H4(" "),
+            html.Hr(),
+            html.H4(" "),
+            html.Div([html.H6("    Underlying Info"), tableUdlInfo, html.H4(" "), html.H6("    Underlying Data Check"), tableMarketDataCheck]),
+            html.Div([html.H6(id="text-checkRate"), html.H6(id="text-checkDiv")]),
+            html.Div(html.H6(" "), style={"height": "100px", "width": "100%"}),
+            html.Div([dcc.Loading([dcc.Store(id='memory-vol'), dcc.Store(id='memory-fwd')], type="default", color="#466590")], style={"width": "100%"}),
+        ], style={"height": "88vh", "width": "100%"}),
+        #html.Div(html.H6(" "), style={"height": "440px", "width": "100%"}),
         html.Div(
             [
                 dbc.Button("Other Market Data", id="button-otherMarketData", outline=True, color="primary", 
@@ -461,6 +455,7 @@ def createUndlNameInfoRowData(undlName):
     ccy = get_CCY(undlName)
     dvdccy = get_DVDCCY(undlName)
     listedExerciseType = get_listedExerciseType(undlName)
+    dataCheck = True
 
     rowDataUndlInfo = [{"Field": "RIC Code", "Value": ric if ric != None else ""},
                        {"Field": "BBG Code", "Value": bbg if bbg != None else ""},
@@ -504,9 +499,11 @@ def createUndlNameInfoRowData(undlName):
                                   {"Data": "Listed Maturity Rule", "Check": "True" if listedCheck == True else "Missing"},
                                   {"Data": "Holiday Calendar", "Check": "True" if holidayCalendar != None else "Missing"},
                                   {"Data": "Time Zone", "Check": "GMT " + timeZone if timeZone != None else "Missing"},]
+        
+        if rate is None or listedCheck == False or holidayCalendar is None or timeZone is None:
+            dataCheck = False
 
-
-    return rowDataUndlInfo, rowDataMarketDataCheck
+    return rowDataUndlInfo, rowDataMarketDataCheck, dataCheck
 
 def createContentAddUndl(undlName=None):
 
@@ -552,11 +549,14 @@ def createContentSetting():
                         html.Div("Status:", id="text-settingPageStatus"),
                         html.Hr()])
     
-    with open("UserConfig.json", "r") as f:
-        data = json.load(f)
+    useBBGData = 0
+    if os.path.exists("UserConfig.json"):
+        with open("UserConfig.json", "r") as f:
+            data = json.load(f)
+        useBBGData = data["BBGData"]
    
     page = html.Div([html.H6("Enable Bloomgberg Data:"), 
-                     dcc.Dropdown(["True", "False"], value="True" if data["BBGData"] == 1 else "False", id='dropdown-BBGData', style={'color': '#999999'}),
+                     dcc.Dropdown(["True", "False"], value="True" if useBBGData == 1 else "False", id='dropdown-BBGData', style={'color': '#999999'}),
                      html.H6(" "),
                      ], style={'display': 'inline-block'})
     
@@ -589,8 +589,9 @@ def createContentVSFBatch():
                         html.Div("Status:", id="text-VSFPageStatus"),
                         html.Hr()])
     
-    with open("VolSurFit_batch/config.json", "r") as f:
-        VSFConfig = json.load(f)
+    #with open("VolSurFit_batch/config.json", "r") as f:
+    #    VSFConfig = json.load(f)
+    VSFConfig = get_VSFBatchConfig()
     
     rowData = []
     for undlName,setting in VSFConfig.items():
@@ -613,7 +614,7 @@ def createContentVSFBatch():
                                              "cellEditorParams": {"values": ["Dividend", "Repo", "None"]},
                                              "singleClickEdit": True},
                                             {"field": "Fit Type", "maxWidth": 325, "minWidth": 325, "editable": True, "resizable": False}],
-                                columnSize="autoSizeAll",
+                                columnSize="autoSize",
                                 className="ag-theme-balham ag-theme-custom",
                                 dashGridOptions={"rowHeight": 30},
                                 style={"width": 1025, "height": 800})
@@ -894,11 +895,11 @@ def getOptionImpliedDiv(repoFitted, spotRef, div=None, repo=None):
 
     return systemDivPoints, impliedDivPoints
 
-def createContentVolatility(undlName: str, memoryData: dict):
+def createContentVolatility(undlName: str, memoryData: dict, dataCheck: bool=True):
 
     if undlName is None: return html.Div([html.H4("Please select underlying")]), memoryData
 
-    if checkUndlMarketData(undlName) == False: return html.Div([html.H4("Missing Market Data")]), memoryData
+    if dataCheck == False: return html.Div([html.H4("Missing Market Data")]), memoryData
 
     # check if current undlName is same as memory data, else clear memory data
     if memoryData != None:
@@ -1031,7 +1032,7 @@ def createContentVolatility(undlName: str, memoryData: dict):
                                             {"field": "Convex", "maxWidth": 100, "minWidth": 100, "editable": True, "resizable": True,
                                              "valueFormatter": {"function": "d3.format(',.2f')(params.value)"},
                                              "cellStyle": {"background-color": "#fffee0"}}],
-                                columnSize="autoSizeAll",
+                                columnSize="autoSize",
                                 className="ag-theme-balham ag-theme-custom",
                                 dashGridOptions={"rowHeight": 30},
                                 style={"width": 680, "height": 140})
@@ -1067,14 +1068,14 @@ def createContentVolatility(undlName: str, memoryData: dict):
     paramTable = dag.AgGrid(id="SVITable", 
                             rowData=[],
                             columnDefs=columnDefs,
-                            columnSize="autoSizeAll",
+                            columnSize="autoSize",
                             className="ag-theme-balham ag-theme-custom",
                             dashGridOptions={"rowHeight": 30, "rowSelection": "single"})
     
     refParamTable = dag.AgGrid(id="refSVITable", 
                             rowData=[],
                             columnDefs=columnDefs,
-                            columnSize="autoSizeAll",
+                            columnSize="autoSize",
                             className="ag-theme-balham ag-theme-custom",
                             dashGridOptions={"rowHeight": 30, "rowSelection": "single"})
     
@@ -1086,7 +1087,7 @@ def createContentVolatility(undlName: str, memoryData: dict):
                                              "editable": True,
                                              "cellStyle": {"background-color": "#fffee0"},
                                              "type": "numericColumn"}],
-                                columnSize="autoSizeAll",
+                                columnSize="autoSize",
                                 className="ag-theme-balham ag-theme-custom",
                                 dashGridOptions={"rowHeight": 30},
                                 style={"height": 250, "margin-bottom": 10})
@@ -1098,7 +1099,7 @@ def createContentVolatility(undlName: str, memoryData: dict):
                                              "valueFormatter": {"function": "d3.format(',.2f')(params.value)"},
                                              "editable": False,
                                              "type": "numericColumn"}],
-                                columnSize="autoSizeAll",
+                                columnSize="autoSize",
                                 className="ag-theme-balham ag-theme-custom",
                                 dashGridOptions={"rowHeight": 30},
                                 style={"height": 95, "margin-bottom": 10})
@@ -1177,10 +1178,7 @@ def createContentVolatility(undlName: str, memoryData: dict):
             maturities = [m for m in maturities if m > valueDate]
 
     strikes = curveGridStrikes
-    if memoryData is None:
-        vols = list(get_volSmile(undlName, m, np.array(strikes)*spotRef, volSurfaceSVI).values()) if volSurfaceSVI[volTag] != {} else [0 for k in strikes]
-    else:
-        vols = list(memoryData["curveGrid"][m].values())
+    vols = [0 for k in strikes]
     volDf = pd.DataFrame.from_dict({"Strike": strikes, m: vols})
     fig = px.line(volDf, x="Strike", y=m)
     fig = go.Figure(fig, layout_yaxis_range = yaxis_range, layout_xaxis_range = xaxis_range)
@@ -1313,11 +1311,11 @@ def createContentVolatility(undlName: str, memoryData: dict):
                      dbc.Row([topBar]), dbc.Row(panelUndlInfo),
                       dbc.Row(panelParams), dbc.Row(panelFig), dbc.Row(panelGrid), dbc.Row(panelGrid2)]), memoryData
 
-def createContentForward(undlName: str, memoryData: dict):
+def createContentForward(undlName: str, memoryData: dict, dataCheck: bool=True):
 
     if undlName is None: return html.Div([html.H4("Please select underlying")]), memoryData
 
-    if checkUndlMarketData(undlName) == False: return html.Div([html.H4("Missing Market Data")]), memoryData
+    if dataCheck == False: return html.Div([html.H4("Missing Market Data")]), memoryData
 
     if memoryData != None:
         if memoryData["undlName"] != undlName: memoryData = None
@@ -1512,15 +1510,15 @@ app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
                State("memory-fwd", "data")], prevent_initial_call=True)
 def render_page_content(pathname, undlName, memoryVolData, memoryFwdData):
 
-    rowDataUndlInfo, rowDataMarketDataCheck = createUndlNameInfoRowData(undlName)
+    rowDataUndlInfo, rowDataMarketDataCheck, dataCheck = createUndlNameInfoRowData(undlName)
 
     if pathname == "/":
         return html.Div(html.H4("Ready")), memoryVolData, memoryFwdData, rowDataUndlInfo, rowDataMarketDataCheck
     elif pathname == "/forward":
-        page, memoryFwdData = createContentForward(undlName, memoryFwdData)
+        page, memoryFwdData = createContentForward(undlName, memoryFwdData, dataCheck)
         return page, memoryVolData, memoryFwdData, rowDataUndlInfo, rowDataMarketDataCheck
     elif pathname == "/volatility":
-        page, memoryVolData = createContentVolatility(undlName, memoryVolData)
+        page, memoryVolData = createContentVolatility(undlName, memoryVolData, dataCheck)
         return page, memoryVolData, memoryFwdData, rowDataUndlInfo, rowDataMarketDataCheck
     elif pathname == "/addUndlName":
         return createContentAddUndl(undlName), memoryVolData, memoryFwdData, rowDataUndlInfo, rowDataMarketDataCheck
@@ -2720,8 +2718,10 @@ def saveSetting(n_clicks, value):
 
         if value == "True":
             data = {"BBGData": 1}
+            useBBGData = 1
         else:
             data = {"BBGData": 0}
+            useBBGData = 0
 
         with open("UserConfig.json", "w") as f:
             json.dump(data, f, indent=2)
@@ -3294,8 +3294,12 @@ def saveVSF(n_clicks, rowData):
                                                  "saveFittedForward": data["Save Fitted Forward"],
                                                  "fitType": "full"}
 
-        with open("VolSurFit_batch/config.json", "w") as f:
-            json.dump(VSFConfig, f, indent=2)
+        #with open("VolSurFit_batch/config.json", "w") as f:
+        #    json.dump(VSFConfig, f, indent=2)
+        result = upload_VSFBatchConfig(VSFConfig)
+
+        if "error" in result.keys():
+            return result["error"]
     
     return "Status: Saved"
 

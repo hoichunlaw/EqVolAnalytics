@@ -5,9 +5,9 @@ import os, json, time, getpass
 from datetime import date, datetime, timedelta
 from ast import literal_eval
 
-#api_url = "http://127.0.0.1:8000/"
+api_url = "http://127.0.0.1:8000/"
 #api_url = "http://192.168.0.100:8000/"
-api_url = "http://43.198.72.206:80/"
+#api_url = "http://18.163.62.226:80/"
 
 sess = requests.Session()
 
@@ -771,3 +771,24 @@ def delete_undlNameInfo(undlName):
     
     return json.loads(response.text)
 
+def get_VSFBatchConfig():
+
+    req = api_url + "api/v1/getVSFBatchConfig"
+
+    response = sess.get(req)
+    
+    try:
+        return json.loads(response.text)
+    except Exception as e:
+        return {"error": e}
+    
+def upload_VSFBatchConfig(VSFBatchConfig: dict):
+
+    req = api_url + "api/v1/uploadVSFBatchConfig"
+    body = {"string": str(VSFBatchConfig)}
+
+    response = sess.post(req, json=body)
+    
+    result = json.loads(response.text)
+
+    return result
