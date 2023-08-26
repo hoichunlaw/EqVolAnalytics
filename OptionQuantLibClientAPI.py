@@ -5,9 +5,10 @@ import os, json, time, getpass
 from datetime import date, datetime, timedelta
 from ast import literal_eval
 
-#api_url = "http://127.0.0.1:8000/"
-#api_url = "http://192.168.0.100:8000/"
-api_url = "http://18.163.62.226:80/"
+with open("config.json", "r") as f:
+    config = json.load(f)
+
+api_url = config["api_url"]
 
 sess = requests.Session()
 
@@ -637,10 +638,10 @@ def calc_AmericanImpliedVol(params):
     
     return json.loads(response.text)
 
-def fit_volSurfaceSVI(volData, repoFitted, volModel):
+def fit_volSurfaceSVI(volData, repoFitted, volModel, username):
 
     req = api_url + "api/v1/fitVolSurfaceSVI"
-    body = {"volModel": volModel, "volData": str(volData), "repoData": str(repoFitted), "username": os.getlogin()}
+    body = {"volModel": volModel, "volData": str(volData), "repoData": str(repoFitted), "username": username}
 
     response = sess.post(req, json=body)
 
@@ -691,7 +692,7 @@ def upload_dividend(divPanel):
     req = api_url + "api/v1/uploadDividend"
 
     div = {"undlName": divPanel["undlName"],
-           "lastUpdate": getpass.getuser(),
+           "lastUpdate": divPanel["lastUpdate"],
            "lastUpdateTime": datetime.strftime(datetime.now(), "%Y-%m-%dT%H:%M:%S"),
            "Schedule": divPanel["Schedule"]}
 
@@ -706,11 +707,22 @@ def upload_repo(repoPanel):
     req = api_url + "api/v1/uploadRepo"
 
     repo = {"undlName": repoPanel["undlName"],
-            "lastUpdate": getpass.getuser(),
+            "lastUpdate": repoPanel["lastUpdate"],
             "lastUpdateTime": datetime.strftime(datetime.now(), "%Y-%m-%dT%H:%M:%S"),
             "Schedule": repoPanel["Schedule"]}
 
     body = {"repoStr": str(repo)}
+    
+    response = sess.post(req, json=body)
+    
+    return json.loads(response.text)
+
+def upload_data(data: dict, dataType: str):
+    
+    req = api_url + "api/v1/uploadData"
+
+    body = {"jsonStr": str(data),
+            "dataType": dataType}
     
     response = sess.post(req, json=body)
     
@@ -729,6 +741,21 @@ def calc_forward(spotRef, maturity, marketDataParams, valueDate):
     
     req = api_url + "api/v1/calcForward"
     body = {"spotRef": spotRef, "maturity": maturity, 
+            "yieldCurve": str(marketDataParams["yieldCurve"]), 
+            "divCurve": str(marketDataParams["divCurve"]), 
+            "repoCurve": str(marketDataParams["repoCurve"]), 
+            "calendar": marketDataParams["calendar"],
+            "valueDate": valueDate}
+
+    response = sess.post(req, json=body)
+    
+    return json.loads(response.text)
+
+def calc_forwards(spotRef, maturities, marketDataParams, valueDate):
+    
+    req = api_url + "api/v1/calcForwards"
+    body = {"spotRef": spotRef, 
+            "maturities": maturities, 
             "yieldCurve": str(marketDataParams["yieldCurve"]), 
             "divCurve": str(marketDataParams["divCurve"]), 
             "repoCurve": str(marketDataParams["repoCurve"]), 
