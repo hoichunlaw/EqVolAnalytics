@@ -1,10 +1,10 @@
-# Equity Volatility Analytics with Open Source Data
+# Equity Volatility Analytics with Open-Source Data
 
 ## Features
 
 * Quant Lib with European and American Pricer/Implied Vol Solver (with discrete dividends)
 * Vol surface modeling (implementation of SVI vol surface model)
-* Dividend / Repo / Vol Surface fitter with open source equity option data
+* Dividend / Repo / Vol Surface fitter with open-source equity option data
 * Web API for plug-and-play usage for quant lib
 * Web based GUI for market data management and Excel based GUI for vanilla pricer
 
