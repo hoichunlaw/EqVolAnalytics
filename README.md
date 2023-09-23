@@ -30,6 +30,8 @@
 * Click "Fit Vol Surf" to fit vol surface to listed option vol
 " Click "Load Ref" to load historical vol surface for comparison
 
+![MDM](/images/MDM.jpg)
+
 ### Vanilla Pricer
 
 * Input format = "underlying Maturity Strike optionType spotRef", e.g. "NVDA.OQ 3M 90% P"
