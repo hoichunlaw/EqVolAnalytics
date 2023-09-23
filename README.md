@@ -37,3 +37,5 @@
 * Input format = "underlying Maturity Strike optionType spotRef", e.g. "NVDA.OQ 3M 90% P"
 * Return NPV and Greeks, base on system vol (vol surface in market data manager)
 * "F12" to load log and overwrite market data
+
+![VP](/images/VP.jpg)
