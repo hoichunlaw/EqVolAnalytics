@@ -10,9 +10,12 @@
 
 ## Built with
 
-* python and cython on backend computation engine
+* python and cython for backend computation engine
 * dash for front end market data management GUI
 * Excel VBA for Excel base vanilla pricer
 
+## List of tools
 
-
+* Market Data Manager (http://16.163.84.48:8080 username: admin, no password)
+* Vanilla Pricer (in Github repo)
+* Web API (http://16.163.84.48/docs#/users)
