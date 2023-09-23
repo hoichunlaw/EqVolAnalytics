@@ -19,3 +19,19 @@
 * Market Data Manager (http://16.163.84.48:8080 username: admin, no password)
 * Vanilla Pricer (in Github repo)
 * Web API (http://16.163.84.48/docs#/users)
+
+## Usage
+
+### Market Data Manager
+
+* Select Underlying from underlying drop list
+* Click "Forward" and then "Option Imp. Div/Repo" to check listed option implied div/repo. Remark Div/Repo as appropriate
+* Click "Volatility" and then "Optino Chain" to load option quotes and compute implied vol
+* Click "Fit Vol Surf" to fit vol surface to listed option vol
+" Click "Load Ref" to load historical vol surface for comparison
+
+### Vanilla Pricer
+
+* Input format = "underlying Maturity Strike optionType spotRef", e.g. "NVDA.OQ 3M 90% P"
+* Return NPV and Greeks, base on system vol (vol surface in market data manager)
+* "F12" to load log and overwrite market data
