@@ -2,7 +2,7 @@
 
 ## Features
 
-* Quant Lib with European and American Pricer/Implied Vol Solver (with discrete dividends)
+* Analytic Lib with European and American Pricer/Implied Vol Solver (with discrete dividends)
 * Vol surface modeling (implementation of SVI vol surface model)
 * Dividend / Repo / Vol Surface fitter with open-source equity option data
 * Web API for plug-and-play usage for quant lib
