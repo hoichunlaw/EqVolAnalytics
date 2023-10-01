@@ -1,4 +1,4 @@
-# Equity Volatility Analytics with Open-Source Data
+# Equity & Crypto Volatility Analytics with Open-Source Data
 
 ## Features
 
