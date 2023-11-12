@@ -21,16 +21,23 @@ def fetch_underlyingDatabase():
 
     req = api_url + "api/v1/fetchUnderlyingDatabase"
     
-    response = sess.post(req)
+    response = sess.post(req, timeout=10)
+
+    try:
+
+        result = json.loads(response.text)
+        return result
     
-    return json.loads(response.text)
+    except:
+    
+        return {}
 
 def get_RIC(undlName):
     
     req = api_url + "api/v1/getRIC"
     body = {"undlName": undlName}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
     try:
@@ -46,7 +53,7 @@ def get_BBG(undlName):
     req = api_url + "api/v1/getBBG"
     body = {"undlName": undlName}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     result = json.loads(response.text)
     try:
@@ -62,7 +69,7 @@ def get_OBB(undlName):
     req = api_url + "api/v1/getOBB"
     body = {"undlName": undlName}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     result = json.loads(response.text)
     try:
@@ -78,7 +85,7 @@ def get_symbol(undlName):
     req = api_url + "api/v1/getSymbol"
     body = {"undlName": undlName}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     result = json.loads(response.text)
     try:
@@ -94,7 +101,7 @@ def get_systemName(undlName):
     req = api_url + "api/v1/getSystemName"
     body = {"undlName": undlName}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     result = json.loads(response.text)
     try:
@@ -110,7 +117,7 @@ def get_undlType(undlName):
     req = api_url + "api/v1/getUndlType"
     body = {"undlName": undlName}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     result = json.loads(response.text)
     try:
@@ -126,7 +133,7 @@ def get_yieldCurve(ccy, dateRef=None):
     req = api_url + "api/v1/getYieldCurve"
     body = {"ccy": "None" if ccy is None else ccy, "date": "None" if dateRef is None else dateRef}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -135,7 +142,7 @@ def get_dividend(undlName, dateRef=None):
     req = api_url + "api/v1/getDividend"
     body = {"undlName": undlName, "date": "None" if dateRef is None else dateRef}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -144,7 +151,7 @@ def get_repo(undlName, dateRef=None):
     req = api_url + "api/v1/getRepo"
     body = {"undlName": undlName, "date": "None" if dateRef is None else dateRef}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -156,7 +163,7 @@ def get_repoRate(undlName, maturity, repoCurve=None, dateRef=None):
             "repo": str(repoCurve) if repoCurve is not None else "None",
             "date": "None" if dateRef is None else dateRef}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     try:
         result = json.loads(response.text)
@@ -170,7 +177,7 @@ def get_volSurfaceSVI(undlName, dateRef=None):
     req = api_url + "api/v1/getVolSurfaceSVI"
     body = {"undlName": undlName, "date": "None" if dateRef is None else dateRef}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
 
@@ -184,7 +191,7 @@ def get_calendar(undlName):
     req = api_url + "api/v1/getCalendar"
     body = {"undlName": undlName}
     
-    response = sess.post(req, data=json.dumps(body))
+    response = sess.post(req, data=json.dumps(body), timeout=10)
     
     result = json.loads(response.text)
     try:
@@ -200,7 +207,7 @@ def get_CCY(undlName):
     req = api_url + "api/v1/getCCY"
     body = {"undlName": undlName}
     
-    response = sess.post(req, data=json.dumps(body))
+    response = sess.post(req, data=json.dumps(body), timeout=10)
     
     result = json.loads(response.text)
     try:
@@ -216,7 +223,7 @@ def get_DVDCCY(undlName):
     req = api_url + "api/v1/getDVDCCY"
     body = {"undlName": undlName}
     
-    response = sess.post(req, data=json.dumps(body))
+    response = sess.post(req, data=json.dumps(body), timeout=10)
     
     result = json.loads(response.text)
     try:
@@ -232,7 +239,7 @@ def get_listedExerciseType(undlName):
     req = api_url + "api/v1/getListedExerciseType"
     body = {"undlName": undlName}
     
-    response = sess.post(req, data=json.dumps(body))
+    response = sess.post(req, data=json.dumps(body), timeout=10)
     
     result = json.loads(response.text)
     try:
@@ -248,7 +255,7 @@ def get_exchange(undlName):
     req = api_url + "api/v1/getExchange"
     body = {"undlName": undlName}
     
-    response = sess.post(req, data=json.dumps(body))
+    response = sess.post(req, data=json.dumps(body), timeout=10)
     
     result = json.loads(response.text)
     try:
@@ -264,7 +271,20 @@ def get_spot(undlName, delay=0):
     req = api_url + "api/v1/getSpot"
     body = {"undlName": undlName, "n": delay}
     
-    response = sess.post(req, data=json.dumps(body))
+    response = sess.post(req, data=json.dumps(body), timeout=10)
+
+    result = json.loads(response.text)
+    if "error" in result.keys():
+        return {"error": response.text}
+    else:
+        return result
+    
+def get_spotHist(undlName, historicalDate="None"):
+    
+    req = api_url + "api/v1/getSpotHistorical"
+    body = {"undlName": undlName, "date": historicalDate}
+    
+    response = sess.post(req, data=json.dumps(body), timeout=10)
 
     result = json.loads(response.text)
     if "error" in result.keys():
@@ -277,7 +297,7 @@ def get_FX(undlName, delay=0):
     req = api_url + "api/v1/getFX"
     body = {"undlName": undlName, "n": delay}
     
-    response = sess.post(req, data=json.dumps(body))
+    response = sess.post(req, data=json.dumps(body), timeout=10)
 
     result = json.loads(response.text)
     if "error" in result.keys():
@@ -285,19 +305,22 @@ def get_FX(undlName, delay=0):
     else:
         return result
 
-def get_exchangeDate(calendar):
+def get_exchangeDate(calendar, returnType="date"):
     
     req = api_url + "api/v1/getExchangeDate"
     body = {"calendar": calendar}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     result = json.loads(response.text)
     try:
         if "error" in result.keys():
             return None
         else:
-            return result["result"]
+            if returnType == "date":
+                return result["result"].split("T")[0]
+            else:
+                return result["result"]
     except:
         return None
 
@@ -310,7 +333,7 @@ def get_exchangeTimeZone(calendar):
     else:
         body = {"calendar": calendar}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
     try:
@@ -325,7 +348,7 @@ def get_holidayCalendar(calendar):
 
     req = api_url + "api/v1/getHolidayCalendar"
     
-    response = sess.get(req)
+    response = sess.get(req, timeout=10)
 
     result = json.loads(response.text)
     if "error" in result.keys():
@@ -342,16 +365,27 @@ def get_VSFBatch():
 
     req = api_url + "api/v1/getVSFBatch"
 
-    response = sess.get(req)
+    response = sess.get(req, timeout=10)
 
     return json.loads(response.text)
+
+def get_optionChainDataCrypto(undlName):
+
+    req = api_url + "api/v1/getOptionChainDataCrypto"
+    body = {"undlName": undlName}
+
+    response = sess.post(req, json=body, timeout=30)
+
+    result = json.loads(response.text)
+
+    return result
 
 def get_optionChainVolLazy(undlName):
 
     req = api_url + "api/v1/getOptionChainVol_lazy"
     body = {"undlName": undlName}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     try:
         result = json.loads(response.text)
@@ -370,11 +404,12 @@ def get_optionChainVol(optionChainData):
     req = api_url + "api/v1/getOptionChainVol"
     body = {"data": str(optionChainData)}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=60*5)
 
     try:
         result = json.loads(response.text)
     except:
+        print(response.text)
         result = {"error": response.text}
 
     return result
@@ -387,7 +422,7 @@ def get_optionChainRepo(optionChainData):
     req = api_url + "api/v1/getOptionChainRepo"
     body = {"data": str(optionChainData)}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=60*5)
 
     try:
         result = json.loads(response.text)
@@ -403,7 +438,7 @@ def forecast_stockDiv(undlName, factor=1, forecastYear=8):
             "factor": factor,
             "forecastYear": forecastYear}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     try:
         result = json.loads(response.text)
@@ -418,7 +453,7 @@ def fit_divGrowthFactor(undlName, impliedDiv):
     body = {"undlName": undlName,
             "impliedDiv": str(impliedDiv)}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     try:
         result = json.loads(response.text)
@@ -432,7 +467,7 @@ def get_netBusinessDays(fromDate, toDate, calendar):
     req = api_url + "api/v1/netBusinessDays"
     body = {"fromDate": fromDate, "toDate": toDate, "calendar": calendar}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     try:
         result = json.loads(response.text)
@@ -446,7 +481,21 @@ def get_nextBusinessDay(refDate, dayShift, calendar):
     req = api_url + "api/v1/nextBusinessDay"
     body = {"refDate": refDate, "dayShift": dayShift, "calendar": calendar}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
+
+    try:
+        result = json.loads(response.text)
+    except:
+        result = {"error": response.text}
+
+    return result
+
+def is_holiday(refDate, calendar):
+
+    req = api_url + "api/v1/isHoliday"
+    body = {"refDate": refDate, "calendar": calendar}
+
+    response = sess.post(req, json=body, timeout=10)
 
     try:
         result = json.loads(response.text)
@@ -460,7 +509,7 @@ def discount_cashFlow(cashFlow, refDate, payDate, yieldCurve):
     req = api_url + "api/v1/discountCashFlow"
     body = {"cashFlow": cashFlow, "refDate": refDate, "payDate": payDate, "yieldCurve": str(yieldCurve)}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     return json.loads(response.text)
 
@@ -470,7 +519,7 @@ def calc_SVIJW_SpotMoney(moneyness, paramsSVI):
     myStrikes = [moneyness] if (type(moneyness) == float or type(moneyness) == int) else moneyness
     body = mergeDict({"moneyness": list(myStrikes)}, paramsSVI)
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
 
@@ -485,7 +534,7 @@ def calc_SVIJW_FwdMoney(moneyness, paramsSVI):
     myStrikes = [moneyness] if (type(moneyness) == float or type(moneyness) == int) else moneyness
     body = mergeDict({"moneyness": list(myStrikes)}, paramsSVI)
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
 
@@ -506,7 +555,7 @@ def to_SVI(paramsSVIJW):
             "tau": paramsSVIJW["tau"],
             "forward": paramsSVIJW["forward"]}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
 
@@ -524,7 +573,7 @@ def to_SVIJW(paramsSVIJW):
             "tau": paramsSVIJW["tau"],
             "forward": paramsSVIJW["forward"]}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
 
@@ -542,7 +591,7 @@ def get_vol(undlName, maturity, strike, volSurfaceSVI=None, historicalDate=None)
             "volSurfaceSVI": "None" if volSurfaceSVI is None else str(volSurfaceSVI),
             "historicalDate": "None" if historicalDate is None else historicalDate}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
 
@@ -560,7 +609,7 @@ def get_volSmile(undlName, maturity, strikes, volSurfaceSVI=None, historicalDate
             "volSurfaceSVI": "None" if volSurfaceSVI is None else str(volSurfaceSVI),
             "historicalDate": "None" if historicalDate is None else historicalDate}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
 
@@ -582,7 +631,7 @@ def get_volGrid(undlName, maturities, strikes, volSurfaceSVI=None, marketData=No
             "marketData": "None" if marketData is None else str(marketData),
             "historicalDate": "None" if historicalDate is None else historicalDate}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
 
@@ -594,7 +643,7 @@ def check_volSurfaceArb(volSurfaceSVI, marketDataDict, valueDate):
 
     body = {"volSurfaceSVI": str(volSurfaceSVI), "marketData": str(marketDataDict), "valueDate": valueDate}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
 
     result = json.loads(response.text)
 
@@ -606,7 +655,7 @@ def calc_European(params, calcWhat=["NPV"]):
     body = params
     body["calcWhat"] = calcWhat
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -615,7 +664,7 @@ def calc_EuropeanImpliedVol(params):
     req = api_url + "api/v1/EuropeanImpliedVol"
     body = params
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -625,7 +674,7 @@ def calc_American(params, calcWhat=["NPV"]):
     body = params
     body["calcWhat"] = calcWhat
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -634,7 +683,7 @@ def calc_AmericanImpliedVol(params):
     req = api_url + "api/v1/AmericanImpliedVol"
     body = params
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=30)
     
     return json.loads(response.text)
 
@@ -643,7 +692,7 @@ def fit_volSurfaceSVI(volData, repoFitted, volModel, username):
     req = api_url + "api/v1/fitVolSurfaceSVI"
     body = {"volModel": volModel, "volData": str(volData), "repoData": str(repoFitted), "username": username}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=120)
 
     try:
         result = json.loads(response.text)
@@ -651,28 +700,13 @@ def fit_volSurfaceSVI(volData, repoFitted, volModel, username):
         result = {"error": response.text}
 
     return result
-
-def get_status(identifier):
-
-    req = api_url + "api/v1/status/" + str(identifier)
-    
-    try:
-        response = sess.get(req)
-        result = json.loads(response.text)
-        if result["status"] == -999:
-            return None
-        else:
-            result  = {"status": result["status"], "result": result["result"]}
-            return result
-    except:
-        return None
     
 def get_listedMaturityRule():
 
     req = api_url + "api/v1/getListedMaturityRule"
     
     try:
-        response = sess.get(req)
+        response = sess.get(req, timeout=10)
         result = json.loads(response.text)
         return result
     except Exception as e:
@@ -683,7 +717,7 @@ def upload_volSurfaceSVI(volSurfaceSVI):
     req = api_url + "api/v1/uploadVolSurfaceSVI"
     body = {"volSurfaceSVIStr": str(volSurfaceSVI)}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -698,7 +732,7 @@ def upload_dividend(divPanel):
 
     body = {"divStr": str(div)}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -713,7 +747,7 @@ def upload_repo(repoPanel):
 
     body = {"repoStr": str(repo)}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -724,7 +758,7 @@ def upload_data(data: dict, dataType: str):
     body = {"jsonStr": str(data),
             "dataType": dataType}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -733,7 +767,7 @@ def upload_yieldCurve(yieldCurvePanel):
     req = api_url + "api/v1/uploadYieldCurve"
     body = {"yieldCurveStr": str(yieldCurvePanel)}
     
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -747,7 +781,7 @@ def calc_forward(spotRef, maturity, marketDataParams, valueDate):
             "calendar": marketDataParams["calendar"],
             "valueDate": valueDate}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -762,7 +796,7 @@ def calc_forwards(spotRef, maturities, marketDataParams, valueDate):
             "calendar": marketDataParams["calendar"],
             "valueDate": valueDate}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -771,7 +805,7 @@ def get_listedMaturity(months, calendar_undlType):
     req = api_url + "api/v1/getListedMaturity"
     body = {"months": months, "calendar_undlType": calendar_undlType}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -780,7 +814,7 @@ def upload_undlNameInfo(infoDcit):
     req = api_url + "api/v1/uploadUndlNameInfo"
     body = infoDcit
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -789,7 +823,7 @@ def delete_undlNameInfo(undlName):
     req = api_url + "api/v1/deleteUndlNameInfo"
     body = {"undlName": undlName}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
     return json.loads(response.text)
 
@@ -797,7 +831,7 @@ def get_VSFBatchConfig():
 
     req = api_url + "api/v1/getVSFBatchConfig"
 
-    response = sess.get(req)
+    response = sess.get(req, timeout=10)
     
     try:
         return json.loads(response.text)
@@ -809,8 +843,29 @@ def upload_VSFBatchConfig(VSFBatchConfig: dict):
     req = api_url + "api/v1/uploadVSFBatchConfig"
     body = {"string": str(VSFBatchConfig)}
 
-    response = sess.post(req, json=body)
+    response = sess.post(req, json=body, timeout=10)
     
+    result = json.loads(response.text)
+
+    return result
+
+def upload_VSFBatchLog(batchName: str, startTime: str, finishTime: str, log: dict):
+
+    req = api_url + "api/v1/uploadVSFBatchLog"
+    body = {"batchName": batchName, "startTime": startTime, "finishTime": finishTime, "log": str(log)}
+
+    response = sess.post(req, json=body, timeout=10)
+
+    result = json.loads(response.text)
+
+    return result
+
+def get_VSFBatchLog():
+
+    req = api_url + "api/v1/getVSFBatchLog"
+    
+    response = sess.get(req, timeout=10)
+
     result = json.loads(response.text)
 
     return result
