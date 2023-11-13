@@ -583,12 +583,26 @@ def get_vol(undlName, maturity, strike, volSurfaceSVI=None, historicalDate=None)
 
     req = api_url + "api/v1/getVol"
 
-    if type(strikes) == float or type(strikes) == int:
-        strikes = [strikes]
     body = {"undlName": undlName, 
             "maturity": maturity, 
             "strike": strike,
             "volSurfaceSVI": "None" if volSurfaceSVI is None else str(volSurfaceSVI),
+            "historicalDate": "None" if historicalDate is None else historicalDate}
+
+    response = sess.post(req, json=body, timeout=10)
+
+    result = json.loads(response.text)
+
+    return result
+
+def get_pctDeltaVol(undlName, maturity, pctDelta, spotRef=None, historicalDate=None):
+
+    req = api_url + "api/v1/getPctDeltaVol"
+
+    body = {"undlName": undlName, 
+            "maturity": maturity, 
+            "pctDelta": pctDelta,
+            "spotRef": "None" if spotRef is None else str(round(spotRef, 4)),
             "historicalDate": "None" if historicalDate is None else historicalDate}
 
     response = sess.post(req, json=body, timeout=10)
