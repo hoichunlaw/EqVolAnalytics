@@ -16,9 +16,9 @@
 
 ## List of tools
 
-* Market Data Manager (http://16.163.84.48:8080 username: admin, no password)
+* Market Data Manager (http://16.163.46.70:8080 username: admin, no password)
 * Vanilla Pricer (in Github repo)
-* Web API (http://16.163.84.48/docs#/users)
+* Web API (http://16.163.46.70/docs#/users)
 
 ## Usage
 
