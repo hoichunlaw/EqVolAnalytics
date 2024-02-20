@@ -380,6 +380,28 @@ def get_optionChainDataCrypto(undlName):
 
     return result
 
+def save_cryptoFutureData(undlName):
+
+    req = api_url + "api/v1/saveCryptoFutureData"
+    body = {"undlName": undlName}
+
+    response = sess.post(req, json=body, timeout=30)
+
+    result = json.loads(response.text)
+
+    return result
+
+def get_cryptoFutureData(undlName):
+
+    req = api_url + "api/v1/getCryptoFutureData"
+    body = {"undlName": undlName}
+
+    response = sess.post(req, json=body, timeout=30)
+
+    result = json.loads(response.text)
+
+    return result
+
 def get_optionChainVolLazy(undlName):
 
     req = api_url + "api/v1/getOptionChainVol_lazy"
@@ -452,7 +474,7 @@ def get_optionChainVol(optionChainData):
     req = api_url + "api/v1/getOptionChainVol"
     body = {"data": str(optionChainData)}
 
-    response = sess.post(req, json=body, timeout=60*10)
+    response = sess.post(req, json=body, timeout=60*20)
 
     try:
         result = json.loads(response.text)
